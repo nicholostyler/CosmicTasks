@@ -1,0 +1,55 @@
+﻿@page "/"
+@using System.Net.Http
+@inject HttpClient Http
+
+<div class="app">
+    <header>
+        <div class="app-bar">
+            <div class="app-header">
+                <h1>📝️ To Do List</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="main">
+        <div class="task-form">
+            <input 
+                type="text"
+                placeholder="Type to add new task"
+                @bind="todoViewModel.newTodoName"
+            />
+
+            <button @onclick="@todoViewModel.AddItem">Add Task</button>
+        </div>
+        @if (todoViewModel.Items.Count == 0)
+        {
+            <h3>No Items Found.</h3>
+        }
+        else
+        {
+            <ul class="tasks">
+                @foreach(var item in todoViewModel.Items)
+                {
+                    <li>
+                        <label>
+                        <input
+                            type="checkbox"
+                            checked={}
+                            onClick={}
+                            readOnly
+                            />
+                            <span>@item.Name</span>
+                        </label>
+                        <button className="task-button" @onclick="@(async () => await todoViewModel.DeleteItem(item.Id))">&times;</button>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+@code {
+    [Inject]
+    private TodoViewModel todoViewModel { get; set; }
+    protected override async Task OnInitializedAsync() => await todoViewModel.GetTodoItems();
+}
